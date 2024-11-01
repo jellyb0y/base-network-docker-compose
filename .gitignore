@@ -1,0 +1,6 @@
+.execution-data/*
+!.execution-data/.gitkeep
+.consensus-data/*
+!.consensus-data/.gitkeep
+.jwt/*
+!.jwt/.gitkeep
