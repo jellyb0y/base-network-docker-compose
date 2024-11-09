@@ -5,20 +5,15 @@ services:
     container_name: execution
     build: ./go-ethereum
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: "4.0"
-          memory: 8192M
     expose:
       - "8551"
-    # ports:
-    #  - "8545:8545"
-    #  - "8546:8546"
-    #  - "8551:8551"
-    #  - "30303:30303"
-    #  - "30303:30303/udp"
-    command: ["--syncmode=full", "--history.state=1000", "--history.transactions=1000", "--mainnet", "--http.vhosts=*", "--http", "--ws", "--http.api=eth,net,engine,admin", "--http.addr=0.0.0.0", "--authrpc.addr=0.0.0.0", "--authrpc.jwtsecret=/jwt/jwt.hex"]
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+      - "8551:8551"
+      - "30303:30303"
+      - "30303:30303/udp"
+    command: ["--mainnet", "--http.vhosts=*", "--http", "--ws", "--http.api=eth,net,engine,admin", "--http.addr=0.0.0.0", "--authrpc.addr=0.0.0.0", "--authrpc.jwtsecret=/jwt/jwt.hex"]
     volumes:
         - .execution-data:/root
         - .jwt:/jwt
@@ -27,13 +22,8 @@ services:
     container_name: beacon
     image: gcr.io/prysmaticlabs/prysm/beacon-chain:stable
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          cpus: "4.0"
-          memory: 8192M
-    #depends_on:
-    #  - execution
+    depends_on:
+      - execution
     ports:
       - "3500:3500"
       - "13000:13000"
