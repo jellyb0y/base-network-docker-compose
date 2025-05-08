@@ -13,9 +13,10 @@ services:
       - "8551:8551"
       - "30303:30303"
       - "30303:30303/udp"
-    command: ["--mainnet", "--http.vhosts=*", "--http", "--ws", "--http.api=eth,net,engine,admin", "--http.addr=0.0.0.0", "--authrpc.addr=0.0.0.0", "--authrpc.jwtsecret=/jwt/jwt.hex"]
+    command: ["--mainnet", "--datadir=/data", "--http.vhosts=*", "--http", "--ws", "--http.api=eth,net,engine,admin", "--http.addr=0.0.0.0", "--authrpc.addr=0.0.0.0", "--authrpc.jwtsecret=/jwt/jwt.hex"]
     volumes:
-        - .execution-data:/root
+        - .ethereum-current:/data
+        - .ethereum-ancient/geth/chaindata/ancient/:/data/geth/chaindata/ancient
         - .jwt:/jwt
 
   beacon:
@@ -29,6 +30,6 @@ services:
       - "13000:13000"
       - "12000:12000/udp"
     volumes:
-        - .consensus-data:/data
+        - .ethereum-beacon:/data
         - .jwt:/jwt
     command: ["--mainnet", "--datadir=/data", "--jwt-secret=/jwt/jwt.hex", "--checkpoint-sync-url=https://beaconstate.info", "--genesis-beacon-api-url=https://beaconstate.info", "--rpc-host=0.0.0.0", "--grpc-gateway-host=0.0.0.0", "--monitoring-host=0.0.0.0", "--execution-endpoint=http://192.168.1.20:8551", "--accept-terms-of-use"]
